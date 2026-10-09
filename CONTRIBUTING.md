@@ -21,7 +21,7 @@ Install the hub tool from the plugin hub's feed, which this repository's `nuget.
 analyses the plugin the way the hub does before a release:
 
 ```bash
-dotnet tool install --global RunesmithHub.Tool --version 0.1.1
+dotnet tool install --global RunesmithHub.Tool --version 0.1.2
 rshub check .
 ```
 
