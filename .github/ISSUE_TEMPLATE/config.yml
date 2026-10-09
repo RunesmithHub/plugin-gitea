@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a vulnerability
+    url: https://github.com/RunesmithHub/plugin-gitea/security/advisories/new
+    about: Report security problems privately instead of in an issue.
+  - name: Plugin hub questions
+    url: https://github.com/RunesmithHub/registry/issues
+    about: Questions about the plugin hub, publishing or plugin listings.

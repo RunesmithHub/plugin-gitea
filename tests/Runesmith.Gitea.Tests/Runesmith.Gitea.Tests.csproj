@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Headless" />
+    <!-- The plugin leaves out what Runesmith provides; the tests need their own copy. -->
+    <PackageReference Include="Runesmith.Sdk" />
+    <PackageReference Include="HammerUI" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Runesmith.Gitea\Runesmith.Gitea.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Responses\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "id": "runesmith.gitea",
+  "name": "Gitea and Forgejo",
+  "version": "0.1.0",
+  "summary": "Sign in to gitea.com, Codeberg and other Gitea and Forgejo servers, clone from your accounts and open links.",
+  "authors": [
+    "Dylan de Beer"
+  ],
+  "license": "Apache-2.0",
+  "repository": "https://github.com/RunesmithHub/plugin-gitea",
+  "homepage": "https://runesmithhub.github.io/Runesmith/plugins/gitea",
+  "runesmithApi": "^0.1.0",
+  "projects": {
+    "contracts": "src/Runesmith.Gitea.Contracts/Runesmith.Gitea.Contracts.csproj",
+    "implementation": "src/Runesmith.Gitea/Runesmith.Gitea.csproj"
+  },
+  "capabilities": [
+    {
+      "id": "network",
+      "reason": "Talks to the Gitea and Forgejo servers you add to sign you in and list repositories."
+    },
+    {
+      "id": "credentials",
+      "reason": "Keeps your Gitea and Forgejo sign-ins in your system's secret store."
+    },
+    {
+      "id": "process",
+      "reason": "Opens your Gitea or Forgejo server in your browser to sign in."
+    },
+    {
+      "id": "filesystem",
+      "reason": "Remembers the accounts you added and caches avatars."
+    },
+    {
+      "id": "environment",
+      "reason": "Reads a variable that points it at a test server during development."
+    }
+  ],
+  "networkHosts": [
+    "gitea.com",
+    "codeberg.org",
+    "*"
+  ],
+  "icon": "icon.png",
+  "categories": [
+    "Version control",
+    "Cloud and remote"
+  ],
+  "keywords": [
+    "gitea",
+    "forgejo",
+    "codeberg",
+    "clone"
+  ]
+}
