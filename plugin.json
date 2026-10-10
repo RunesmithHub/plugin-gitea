@@ -9,7 +9,7 @@
   ],
   "license": "Apache-2.0",
   "repository": "https://github.com/RunesmithHub/plugin-gitea",
-  "homepage": "https://runesmithhub.github.io/Runesmith/plugins/gitea",
+  "homepage": "https://docs.runesmith.dev/plugins/gitea",
   "runesmithApi": "^0.1.0",
   "projects": {
     "contracts": "src/Runesmith.Gitea.Contracts/Runesmith.Gitea.Contracts.csproj",

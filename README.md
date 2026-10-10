@@ -6,8 +6,8 @@ an access token. Through the [Git plugin](https://github.com/RunesmithHub/plugin
 dialog, lists the open repository's pull requests, and points **Open on** and **Copy Link** at the server's pages.
 
 Gitea and Forgejo each have their own accounts and settings, in **Settings › Gitea** and **Settings › Forgejo**: a server is added under the
-service it runs. The [Gitea](https://runesmithhub.github.io/Runesmith/plugins/gitea) and
-[Forgejo](https://runesmithhub.github.io/Runesmith/plugins/forgejo) documentation describes signing in, registering an OAuth2 application
+service it runs. The [Gitea](https://docs.runesmith.dev/plugins/gitea) and
+[Forgejo](https://docs.runesmith.dev/plugins/forgejo) documentation describes signing in, registering an OAuth2 application
 and the settings.
 
 ## Capabilities
@@ -36,7 +36,7 @@ dotnet build src/Runesmith.Gitea -t:InstallPlugin
 ```
 
 `InstallPlugin` copies the built plugin into your Runesmith plugins folder; restart Runesmith to load it. [CONTRIBUTING.md](CONTRIBUTING.md)
-has the checks a change must pass, and the [Runesmith documentation](https://runesmithhub.github.io/Runesmith/) covers writing plugins.
+has the checks a change must pass, and the [Runesmith documentation](https://docs.runesmith.dev/) covers writing plugins.
 
 ## License
 
