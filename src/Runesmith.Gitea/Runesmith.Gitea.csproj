@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Gitea and Forgejo in Runesmith: signing in to gitea.com, Codeberg and other Gitea and Forgejo servers, cloning, links and pull requests.</Description>
+    <!-- Flags text users see that is written in the code instead of locales/en. -->
+    <RunesmithLocalize>true</RunesmithLocalize>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Runesmith.Gitea.Contracts\Runesmith.Gitea.Contracts.csproj" />

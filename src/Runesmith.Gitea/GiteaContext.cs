@@ -52,7 +52,7 @@ internal sealed class GiteaContext(
         if (launcher is not null)
             launcher.OpenUrl(url);
         else
-            notifications?.Notify(NotificationKind.Info, "Open this address in a browser", url.AbsoluteUri);
+            notifications?.Notify(NotificationKind.Info, Strings.OpenAddressInBrowser, url.AbsoluteUri);
     }
 
     /// <summary>Raises an event on the UI thread.</summary>

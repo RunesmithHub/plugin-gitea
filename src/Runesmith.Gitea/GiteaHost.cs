@@ -128,7 +128,7 @@ internal sealed class GiteaHost : IRepositoryHost, IGiteaTokenSource, IDisposabl
     {
         if (prompt() is not { } signIn)
         {
-            context.Notifications?.Notify(NotificationKind.Error, "Signing in needs a newer Runesmith", "This version of Runesmith does not let plugins show dialogs.");
+            context.Notifications?.Notify(NotificationKind.Error, Strings.SignInNeedsDialogs, Strings.SignInNeedsDialogsMessage);
             return false;
         }
 
@@ -169,7 +169,7 @@ internal sealed class GiteaHost : IRepositoryHost, IGiteaTokenSource, IDisposabl
     public void OnUnauthorized()
     {
         if (tokens is not null)
-            _ = ExpireAsync($"{Name} no longer accepts the sign-in of {Login}. Sign in again.");
+            _ = ExpireAsync(Strings.AccountSignInRefused(service: Name, account: Login ?? ""));
     }
 
     public async Task<IReadOnlyList<HostedRepository>> GetRepositoriesAsync(CancellationToken cancellationToken)
@@ -357,7 +357,7 @@ internal sealed class GiteaHost : IRepositoryHost, IGiteaTokenSource, IDisposabl
             gate.Release();
         }
 
-        await ExpireAsync($"The {Name} sign-in of {Login} expired. Sign in again.").ConfigureAwait(false);
+        await ExpireAsync(Strings.AccountSignInExpired(service: Name, account: Login ?? "")).ConfigureAwait(false);
         return null;
     }
 
@@ -365,7 +365,7 @@ internal sealed class GiteaHost : IRepositoryHost, IGiteaTokenSource, IDisposabl
     {
         await ForgetTokensAsync().ConfigureAwait(false);
         RaiseChanged();
-        context.Notifications?.Notify(NotificationKind.Warning, $"Signed out of {Name}", message, "Sign In", () => _ = SignInAsync(CancellationToken.None));
+        context.Notifications?.Notify(NotificationKind.Warning, Strings.SignedOutOf(Name), message, Strings.SignIn, () => _ = SignInAsync(CancellationToken.None));
     }
 
     private async Task ForgetTokensAsync()

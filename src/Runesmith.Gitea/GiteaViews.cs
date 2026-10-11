@@ -166,9 +166,9 @@ internal static class ViewHelpers
     /// <summary>Gets the note that says where tokens are kept.</summary>
     public static DockPanel StoreNote(GiteaContext context)
     {
-        var text = context.HasSystemSecretStore ? "Tokens are kept in the system's secret store."
-            : context.Secrets is not null ? "No system secret store was found, so tokens are kept in a file only you can read."
-            : "Tokens are kept only until Runesmith closes.";
+        var text = context.HasSystemSecretStore ? Strings.TokensInSystemStore
+            : context.Secrets is not null ? Strings.TokensInFile
+            : Strings.TokensInMemory;
         var lockIcon = Icon(Icons.Lock, 12, "TextMutedBrush");
         lockIcon.VerticalAlignment = VerticalAlignment.Top;
         lockIcon.Margin = new Thickness(0, 2, 6, 0);

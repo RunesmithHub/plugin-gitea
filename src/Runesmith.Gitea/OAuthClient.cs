@@ -89,8 +89,8 @@ internal sealed class OAuthClient(HttpClient http, GiteaServer server, string se
         return response is { AccessToken.Length: > 0 } ? ToTokens(response)
             : response?.Error == "unauthorized_client" ? throw UnknownClient()
             : throw new OAuthException(OAuthFailure.Refused, response?.ErrorDescription is { Length: > 0 } description
-                ? $"{serverName} did not finish the sign-in: {description.TrimEnd('.')}. Try again."
-                : $"{serverName} did not finish the sign-in. Try again.");
+                ? Strings.OauthNotFinishedReasonRetry(server: serverName, reason: description.TrimEnd('.'))
+                : Strings.OauthNotFinished(serverName));
     }
 
     /// <summary>Exchanges a refresh token for new tokens; the server may replace the refresh token too.</summary>
@@ -104,14 +104,14 @@ internal sealed class OAuthClient(HttpClient http, GiteaServer server, string se
         ], cancellationToken).ConfigureAwait(false);
         return response is { AccessToken.Length: > 0 }
             ? ToTokens(response)
-            : throw new OAuthException(OAuthFailure.Refused, $"The {serverName} sign-in expired. Sign in to {serverName} again.");
+            : throw new OAuthException(OAuthFailure.Refused, Strings.SignInExpired(serverName));
     }
 
     /// <summary>Gets the S256 code challenge of a verifier: its SHA-256 hash in base64url without padding.</summary>
     internal static string Challenge(string verifier) => Base64Url(SHA256.HashData(Encoding.ASCII.GetBytes(verifier)));
 
     private OAuthException UnknownClient() => new(OAuthFailure.UnknownClient,
-        $"{serverName} does not know the OAuth2 application in the client ID setting, or its redirect URI is not http://127.0.0.1{CallbackPath}.");
+        Strings.OauthUnknownClient(server: serverName, redirect: "http://127.0.0.1" + CallbackPath));
 
     private OAuthTokens ToTokens(OAuthTokenResponse response) => new(response.AccessToken!,
         response.ExpiresIn is > 0 ? time.GetUtcNow().AddSeconds(response.ExpiresIn.Value) : null,
@@ -125,22 +125,22 @@ internal sealed class OAuthClient(HttpClient http, GiteaServer server, string se
         {
             using var response = await http.SendAsync(request, cancellationToken).ConfigureAwait(false);
             if ((int)response.StatusCode >= 500)
-                throw new OAuthException(OAuthFailure.Network, $"{serverName} could not finish the sign-in. Try again in a moment.");
+                throw new OAuthException(OAuthFailure.Network, Strings.OauthServerFailed(serverName));
 
             // The token endpoint answers its errors with 400 and a JSON body that names them.
             return await response.Content.ReadFromJsonAsync(GiteaJson.Default.OAuthTokenResponse, cancellationToken).ConfigureAwait(false);
         }
         catch (HttpRequestException exception)
         {
-            throw new OAuthException(OAuthFailure.Network, $"{serverName} could not be reached. Check the connection and try again.", exception);
+            throw new OAuthException(OAuthFailure.Network, Strings.ServerUnreachable(serverName), exception);
         }
         catch (TaskCanceledException exception) when (!cancellationToken.IsCancellationRequested)
         {
-            throw new OAuthException(OAuthFailure.Network, $"{serverName} took too long to answer. Try again in a moment.", exception);
+            throw new OAuthException(OAuthFailure.Network, Strings.ServerSlow(serverName), exception);
         }
         catch (Exception exception) when (exception is JsonException or NotSupportedException)
         {
-            throw new OAuthException(OAuthFailure.Other, $"{serverName} sent an answer Runesmith does not understand.", exception);
+            throw new OAuthException(OAuthFailure.Other, Strings.ServerBadAnswer(serverName), exception);
         }
     }
 
@@ -191,35 +191,35 @@ internal sealed class LoopbackAuthorization : IDisposable
             var request = context.Request;
             if (!string.Equals(request.Url?.AbsolutePath, OAuthClient.CallbackPath, StringComparison.Ordinal))
             {
-                await RespondAsync(context, HttpStatusCode.NotFound, "Not found", "This address is only for signing in.").ConfigureAwait(false);
+                await RespondAsync(context, HttpStatusCode.NotFound, Strings.PageNotFound, Strings.PageNotFoundMessage).ConfigureAwait(false);
                 continue;
             }
 
             var query = request.QueryString;
             if (!string.Equals(query["state"], state, StringComparison.Ordinal))
             {
-                await RespondAsync(context, HttpStatusCode.BadRequest, "Not this sign-in",
-                    "This answer belongs to another sign-in. Use the newest browser tab Runesmith opened.").ConfigureAwait(false);
+                await RespondAsync(context, HttpStatusCode.BadRequest, Strings.PageWrongSignIn,
+                    Strings.PageWrongSignInMessage).ConfigureAwait(false);
                 continue;
             }
 
             if (query["code"] is { Length: > 0 } code)
             {
-                await RespondAsync(context, HttpStatusCode.OK, "Signed in",
-                    "Runesmith received the approval. You can close this tab and go back to Runesmith.").ConfigureAwait(false);
+                await RespondAsync(context, HttpStatusCode.OK, Strings.PageSignedIn,
+                    Strings.PageSignedInMessage).ConfigureAwait(false);
                 return code;
             }
 
             var error = query["error"];
-            await RespondAsync(context, HttpStatusCode.OK, "Not signed in", "Runesmith was not approved. You can close this tab.").ConfigureAwait(false);
+            await RespondAsync(context, HttpStatusCode.OK, Strings.NotSignedIn, Strings.PageNotApprovedMessage).ConfigureAwait(false);
             throw error switch
             {
-                "access_denied" => new OAuthException(OAuthFailure.Denied, $"The sign-in was cancelled on {serverName}."),
+                "access_denied" => new OAuthException(OAuthFailure.Denied, Strings.OauthDenied(serverName)),
                 "unauthorized_client" or "invalid_client" or "invalid_request" => new OAuthException(OAuthFailure.UnknownClient,
-                    $"{serverName} refused the OAuth2 application: check its client ID and that its redirect URI is http://127.0.0.1{OAuthClient.CallbackPath}."),
+                    Strings.OauthRefusedClient(server: serverName, redirect: "http://127.0.0.1" + OAuthClient.CallbackPath)),
                 _ => new OAuthException(OAuthFailure.Other, query["error_description"] is { Length: > 0 } description
-                    ? $"{serverName} did not finish the sign-in: {description.TrimEnd('.')}."
-                    : $"{serverName} did not finish the sign-in. Try again."),
+                    ? Strings.OauthNotFinishedReason(server: serverName, reason: description.TrimEnd('.'))
+                    : Strings.OauthNotFinished(serverName)),
             };
         }
     }
@@ -284,7 +284,7 @@ internal sealed class LoopbackListener : IDisposable
                 listener.Close();
                 // Another program can take the port between finding it free and listening on it.
                 if (attempt == Attempts)
-                    throw new OAuthException(OAuthFailure.Network, "Runesmith could not open a local port for the browser's answer.", exception);
+                    throw new OAuthException(OAuthFailure.Network, Strings.OauthNoPort, exception);
             }
         }
     }

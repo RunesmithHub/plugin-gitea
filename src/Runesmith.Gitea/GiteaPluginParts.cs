@@ -74,12 +74,11 @@ internal abstract class GiteaPluginSection(GiteaPluginProvider provider) : ISett
 /// <summary>A service's setting: the OAuth2 client ids of the servers where browser sign-in is set up.</summary>
 internal abstract class GiteaPluginSettings(GiteaFlavor flavor) : ISettingContributor
 {
-    public IEnumerable<SettingDefinition> Settings { get; } =
+    public IEnumerable<SettingDefinition> Settings =>
     [
-        new(flavor.ClientIdsSetting, "OAuth2 client IDs", flavor.SettingsCategory, "")
+        new(flavor.ClientIdsSetting, Strings.SettingClientIds, flavor.SettingsCategory, "")
         {
-            Description = $"The client ID of the OAuth2 application registered for Runesmith on each server, as server=ID pairs separated by commas, " +
-                $"such as {flavor.DefaultServer.Key}=1a2b3c4d. An ID without a server is for {flavor.DefaultServerName}. Servers without one sign in with an access token.",
+            Description = Strings.SettingClientIdsDescription(example: flavor.DefaultServer.Key, server: flavor.DefaultServerName),
         },
     ];
 }

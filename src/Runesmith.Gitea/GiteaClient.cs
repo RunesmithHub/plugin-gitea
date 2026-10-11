@@ -188,7 +188,7 @@ internal sealed partial class GiteaClient(HttpClient http, GiteaServer server, s
     {
         var explicitToken = token is not null;
         token ??= await tokens.GetTokenAsync(cancellationToken).ConfigureAwait(false)
-            ?? throw new GiteaException(GiteaFailure.Unauthorized, $"Sign in to {serverName} to continue.");
+            ?? throw new GiteaException(GiteaFailure.Unauthorized, Strings.SignInToContinue(serverName));
 
         using var request = new HttpRequestMessage(method, uri) { Content = content };
         AddCommonHeaders(request);
@@ -201,11 +201,11 @@ internal sealed partial class GiteaClient(HttpClient http, GiteaServer server, s
         }
         catch (HttpRequestException exception)
         {
-            throw new GiteaException(GiteaFailure.Network, $"{serverName} could not be reached. Check the connection and try again.", exception);
+            throw new GiteaException(GiteaFailure.Network, Strings.ServerUnreachable(serverName), exception);
         }
         catch (TaskCanceledException exception) when (!cancellationToken.IsCancellationRequested)
         {
-            throw new GiteaException(GiteaFailure.Network, $"{serverName} took too long to answer. Try again in a moment.", exception);
+            throw new GiteaException(GiteaFailure.Network, Strings.ServerSlow(serverName), exception);
         }
 
         if (response.IsSuccessStatusCode)
@@ -225,15 +225,15 @@ internal sealed partial class GiteaClient(HttpClient http, GiteaServer server, s
         var message = (await ReadErrorAsync(response, cancellationToken).ConfigureAwait(false)) is { } body ? Describe(body) : null;
         return response.StatusCode switch
         {
-            HttpStatusCode.Unauthorized => new GiteaException(GiteaFailure.Unauthorized, $"{serverName} no longer accepts this sign-in. Sign in to {serverName} again."),
+            HttpStatusCode.Unauthorized => new GiteaException(GiteaFailure.Unauthorized, Strings.SignInRefused(serverName)),
             HttpStatusCode.Forbidden => new GiteaException(GiteaFailure.Forbidden, message is { Length: > 0 }
-                ? $"{serverName} refused: {message}. Check that the token has the scopes Runesmith needs."
-                : $"{serverName} refused. Check that the token has the scopes Runesmith needs."),
-            HttpStatusCode.NotFound => new GiteaException(GiteaFailure.NotFound, $"{serverName} could not find it, or the account has no access to it."),
+                ? Strings.RefusedReason(server: serverName, reason: message)
+                : Strings.Refused(serverName)),
+            HttpStatusCode.NotFound => new GiteaException(GiteaFailure.NotFound, Strings.NotFound(serverName)),
             HttpStatusCode.Conflict or HttpStatusCode.UnprocessableEntity => new GiteaException(GiteaFailure.Invalid,
-                message is { Length: > 0 } ? $"{serverName} did not accept it: {message}." : $"{serverName} did not accept the request."),
+                message is { Length: > 0 } ? Strings.NotAcceptedReason(server: serverName, reason: message) : Strings.NotAccepted(serverName)),
             var status => new GiteaException(GiteaFailure.Server,
-                FormattableString.Invariant($"{serverName} answered with an error ({(int)status}). Try again in a moment.")),
+                Strings.ServerError(server: serverName, status: (int)status)),
         };
     }
 
@@ -261,11 +261,11 @@ internal sealed partial class GiteaClient(HttpClient http, GiteaServer server, s
         try
         {
             return await response.Content.ReadFromJsonAsync(type, cancellationToken).ConfigureAwait(false)
-                ?? throw new GiteaException(GiteaFailure.Server, $"{serverName} sent an empty answer.");
+                ?? throw new GiteaException(GiteaFailure.Server, Strings.ServerEmptyAnswer(serverName));
         }
         catch (Exception exception) when (exception is JsonException or NotSupportedException)
         {
-            throw new GiteaException(GiteaFailure.Server, $"{serverName} sent an answer Runesmith does not understand.", exception);
+            throw new GiteaException(GiteaFailure.Server, Strings.ServerBadAnswer(serverName), exception);
         }
     }
 

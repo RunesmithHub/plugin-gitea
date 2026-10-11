@@ -45,11 +45,11 @@ internal static class ServerProbe
         }
         catch (HttpRequestException exception)
         {
-            throw new GiteaException(GiteaFailure.Network, $"{server.Key} could not be reached. Check the address and the connection.", exception);
+            throw new GiteaException(GiteaFailure.Network, Strings.ProbeUnreachable(server.Key), exception);
         }
         catch (TaskCanceledException exception) when (!cancellationToken.IsCancellationRequested)
         {
-            throw new GiteaException(GiteaFailure.Network, $"{server.Key} took too long to answer. Check the address and try again.", exception);
+            throw new GiteaException(GiteaFailure.Network, Strings.ProbeSlow(server.Key), exception);
         }
     }
 }

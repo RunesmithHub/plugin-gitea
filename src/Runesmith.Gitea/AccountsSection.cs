@@ -78,10 +78,10 @@ internal sealed class AccountsCard : Border
             rows.Children.Add(host.Login is null ? FirstAccount(host) : AccountRow(host));
         }
 
-        var add = IconButton(Icons.Plus, "Add Account", "small");
+        var add = IconButton(Icons.Plus, Strings.AddAccount, "small");
         add.HorizontalAlignment = HorizontalAlignment.Left;
         add.Click += (_, _) => _ = provider.AddAccountAsync(CancellationToken.None);
-        var guide = Link("How to set up browser sign-in", () => provider.Context.OpenUrl(RegistrationGuideUri));
+        var guide = Link(Strings.BrowserSignInGuide, () => provider.Context.OpenUrl(RegistrationGuideUri));
         var footer = new DockPanel { LastChildFill = false, Children = { add, guide } };
         DockPanel.SetDock(guide, Dock.Right);
         Child = new StackPanel { Spacing = 14, Children = { rows, Divider(new Thickness(0)), footer } };
@@ -92,9 +92,9 @@ internal sealed class AccountsCard : Border
         var login = host.Login!;
         var how = host.Kind switch
         {
-            SignInKind.OAuth => "Signed in through the browser",
-            SignInKind.Token => "Signed in with an access token",
-            _ => "Signed out",
+            SignInKind.OAuth => Strings.SignedInBrowser,
+            SignInKind.Token => Strings.SignedInToken,
+            _ => Strings.SignedOutState,
         };
         var title = host.Profile.FullName is { } fullName ? $"{fullName} (@{login})" : "@" + login;
         var text = new StackPanel
@@ -106,20 +106,20 @@ internal sealed class AccountsCard : Border
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, VerticalAlignment = VerticalAlignment.Center };
         if (host.IsSignedIn)
         {
-            var manage = IconButton(Icons.Shield, "Manage Tokens", "small");
-            ToolTip.SetTip(manage, $"Open the applications settings on {host.Server.Key}");
+            var manage = IconButton(Icons.Shield, Strings.ManageTokens, "small");
+            ToolTip.SetTip(manage, Strings.ManageTokensTip(host.Server.Key));
             manage.Click += (_, _) => provider.Context.OpenUrl(host.Server.ApplicationsUri);
-            var signOut = IconButton(GiteaIcons.Get(GiteaIcons.LogOut), "Sign Out", "small");
+            var signOut = IconButton(GiteaIcons.Get(GiteaIcons.LogOut), Strings.SignOut, "small");
             signOut.Click += (_, _) => _ = prompts.SignOutAsync(host);
             buttons.Children.Add(manage);
             buttons.Children.Add(signOut);
         }
         else
         {
-            var signIn = IconButton(GiteaIcons.Get(host.Icon), "Sign In", "accent", "small");
+            var signIn = IconButton(GiteaIcons.Get(host.Icon), Strings.SignIn, "accent", "small");
             signIn.Click += (_, _) => _ = host.SignInAsync(CancellationToken.None);
             var remove = new Button { Classes = { "icon", "subtle", "small" }, Content = new SymbolIcon { Data = Icons.Trash, Size = 14 }, VerticalAlignment = VerticalAlignment.Center };
-            ToolTip.SetTip(remove, "Remove the account");
+            ToolTip.SetTip(remove, Strings.RemoveAccountTip);
             remove.Click += (_, _) => _ = prompts.RemoveAsync(host);
             buttons.Children.Add(signIn);
             buttons.Children.Add(remove);
@@ -137,12 +137,12 @@ internal sealed class AccountsCard : Border
             VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
-                Label("Not signed in", weight: FontWeight.SemiBold),
-                Label($"Sign in to clone from {host.Server.Key}, push with your account and see pull requests. Add Account signs in to another server.",
+                Label(Strings.NotSignedIn, weight: FontWeight.SemiBold),
+                Label(Strings.NotSignedInHint(host.Server.Key),
                     "TextMutedBrush", 12, wrap: true),
             },
         };
-        var signIn = IconButton(GiteaIcons.Get(host.Icon), $"Sign in to {host.Name}", "accent", "small");
+        var signIn = IconButton(GiteaIcons.Get(host.Icon), Strings.SignInTo(host.Name), "accent", "small");
         signIn.VerticalAlignment = VerticalAlignment.Center;
         signIn.Click += (_, _) => _ = host.SignInAsync(CancellationToken.None);
         var mark = new Border { Width = 40, Height = 40, CornerRadius = new CornerRadius(20), Child = Icon(GiteaIcons.Get(host.Icon), 20) };
