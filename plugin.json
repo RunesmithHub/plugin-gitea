@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "runesmith.gitea",
   "name": "Gitea and Forgejo",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "summary": "Sign in to gitea.com, Codeberg and other Gitea and Forgejo servers, clone from your accounts and open links.",
   "authors": [
     "Dylan de Beer"
@@ -10,7 +10,7 @@
   "license": "Apache-2.0",
   "repository": "https://github.com/RunesmithHub/plugin-gitea",
   "homepage": "https://docs.runesmith.dev/plugins/gitea",
-  "runesmithApi": "^0.1.0",
+  "runesmithApi": "^0.1.2",
   "projects": {
     "contracts": "src/Runesmith.Gitea.Contracts/Runesmith.Gitea.Contracts.csproj",
     "implementation": "src/Runesmith.Gitea/Runesmith.Gitea.csproj"
@@ -42,6 +42,7 @@
     "codeberg.org",
     "*"
   ],
+  "languages": ["en"],
   "icon": "icon.png",
   "categories": [
     "Version control",

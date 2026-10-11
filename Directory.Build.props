@@ -16,7 +16,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/RunesmithHub/plugin-gitea</PackageProjectUrl>
     <RepositoryUrl>https://github.com/RunesmithHub/plugin-gitea</RepositoryUrl>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <!-- The Runesmith.Sdk layout targets look for plugin.json here rather than beside the project folders. -->
     <RunesmithPluginRoot>$(MSBuildThisFileDirectory)</RunesmithPluginRoot>
   </PropertyGroup>
