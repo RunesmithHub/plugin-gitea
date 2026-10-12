@@ -1,6 +1,6 @@
 using System.Text.Json;
+using Runesmith.Git.Contracts;
 using Runesmith.Sdk.Shell;
-using Runesmith.Sdk.VersionControl;
 
 namespace Runesmith.Gitea;
 

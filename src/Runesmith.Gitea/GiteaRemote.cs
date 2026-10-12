@@ -1,6 +1,6 @@
 using System.Globalization;
 using System.Text;
-using Runesmith.Sdk.VersionControl;
+using Runesmith.Git.Contracts;
 
 namespace Runesmith.Gitea;
 

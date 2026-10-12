@@ -11,6 +11,7 @@
     <PackageReference Include="Avalonia.Headless" />
     <!-- The plugin leaves out what Runesmith provides; the tests need their own copy. -->
     <PackageReference Include="Runesmith.Sdk" />
+    <PackageReference Include="RunesmithHub.Runesmith.Git.Contracts" />
     <PackageReference Include="HammerUI" />
   </ItemGroup>
   <ItemGroup>

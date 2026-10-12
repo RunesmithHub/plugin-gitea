@@ -136,7 +136,7 @@ public abstract class GiteaProviderTests : IDisposable
 
         var credentials = await source.GetAsync($"https://{server}/alice/notes.git", Token);
 
-        Assert.Equal(new Runesmith.Sdk.VersionControl.GitCredentials(server, "alice", "pasted"), credentials);
+        Assert.Equal(new Runesmith.Git.Contracts.GitCredentials(server, "alice", "pasted"), credentials);
         Assert.Null(await source.GetAsync($"git@{server}:alice/notes.git", Token));
         Assert.Null(await source.GetAsync("https://github.com/alice/notes.git", Token));
         Assert.Null(await source.GetAsync($"https://{server}.evil.example/alice/notes.git", Token));

@@ -1,9 +1,9 @@
 using Avalonia.Controls;
 using HammerUI.Services;
+using Runesmith.Git.Contracts;
 using Runesmith.Sdk;
 using Runesmith.Sdk.Settings;
 using Runesmith.Sdk.Shell;
-using Runesmith.Sdk.VersionControl;
 
 namespace Runesmith.Gitea;
 

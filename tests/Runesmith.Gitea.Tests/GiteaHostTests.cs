@@ -1,5 +1,5 @@
 using System.Net;
-using Runesmith.Sdk.VersionControl;
+using Runesmith.Git.Contracts;
 
 namespace Runesmith.Gitea.Tests;
 

@@ -10,6 +10,9 @@
   <!-- Runesmith supplies these when it loads the plugin, so none of them is copied next to it. -->
   <ItemGroup>
     <PackageReference Include="Runesmith.Sdk" ExcludeAssets="runtime" />
+    <!-- The Git plugin's contracts: the repository, running Git and the hosting contracts this plugin implements. Runesmith supplies them
+         from the Git plugin when it loads this one. -->
+    <PackageReference Include="RunesmithHub.Runesmith.Git.Contracts" ExcludeAssets="runtime" />
     <PackageReference Include="HammerUI" ExcludeAssets="runtime" />
     <PackageReference Include="Avalonia" ExcludeAssets="runtime" />
   </ItemGroup>
