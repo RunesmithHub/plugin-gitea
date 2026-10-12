@@ -6,9 +6,11 @@
     <AvaloniaVersion>12.1.4</AvaloniaVersion>
   </PropertyGroup>
   <ItemGroup Label="Runesmith">
-    <PackageVersion Include="Runesmith.Sdk" Version="0.1.2" />
-    <PackageVersion Include="Runesmith.Text" Version="0.1.2" />
-    <PackageVersion Include="Runesmith.LanguageServices" Version="0.1.2" />
+    <PackageVersion Include="Runesmith.Sdk" Version="0.2.0" />
+    <PackageVersion Include="Runesmith.Text" Version="0.2.0" />
+    <PackageVersion Include="Runesmith.LanguageServices" Version="0.2.0" />
+    <!-- The contracts of the Git plugin, which this plugin depends on; the hub publishes them to its feed with each release of the Git plugin. -->
+    <PackageVersion Include="RunesmithHub.Runesmith.Git.Contracts" Version="0.2.0" />
   </ItemGroup>
   <ItemGroup Label="User interface">
     <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />

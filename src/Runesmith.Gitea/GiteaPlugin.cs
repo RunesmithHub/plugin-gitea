@@ -1,9 +1,9 @@
 using System.Composition;
 using HammerUI.Services;
+using Runesmith.Git.Contracts;
 using Runesmith.Sdk.Plugins;
 using Runesmith.Sdk.Settings;
 using Runesmith.Sdk.Shell;
-using Runesmith.Sdk.VersionControl;
 
 namespace Runesmith.Gitea;
 
