@@ -83,7 +83,7 @@ jobs:
 
       # nuget.config maps RunesmithHub.* to the hub feed, and the SDK refuses --add-source alongside source mapping.
       - name: Install the hub tool from the hub feed
-        run: dotnet tool install RunesmithHub.Tool --version 0.1.8 --tool-path "$RUNNER_TEMP/rshub"
+        run: dotnet tool install RunesmithHub.Tool --version 0.1.9 --tool-path "$RUNNER_TEMP/rshub"
 
       - name: Check the plugin
         run: '"$RUNNER_TEMP/rshub/rshub" check .'
