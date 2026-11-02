@@ -45,9 +45,9 @@
       },
       "RunesmithHub.Runesmith.Git.Contracts": {
         "type": "Direct",
-        "requested": "[0.2.0, )",
-        "resolved": "0.2.0",
-        "contentHash": "nrYYQp3425Lto1nemtQvCN0M+wXjpDSMrgqRznRGcZxzfOqFsUadz6WkNpda0zdmI0cgo9qk/9I+gd2McpTM0g=="
+        "requested": "[0.2.1, )",
+        "resolved": "0.2.1",
+        "contentHash": "/5Ou6NpZoLmN23YGfgxBMfM0mNhMn16RkqojgUZW4DgxoD6iBWrR+bzb/lpoNKWI340Aqp3LeXphHEHupUuMDQ=="
       },
       "Avalonia.BuildServices": {
         "type": "Transitive",
